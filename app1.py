@@ -3,6 +3,8 @@ from langchain_openai import ChatOpenAI
 from langchain_community.document_loaders import CSVLoader
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
+import pandas as pd
+from io import StringIO
 
 # Set up the OpenAI API key
 api_openai = "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"
@@ -16,8 +18,9 @@ csv_file_upload = st.file_uploader('Choose a CSV file', type=['csv'])
 
 # If a CSV file is uploaded, load and process the data
 if csv_file_upload is not None:
-    # Load the CSV data using LangChain CSVLoader
-    data = CSVLoader(csv_file_upload).load()
+    # Read the CSV data into a pandas DataFrame
+    string_data = StringIO(csv_file_upload.getvalue().decode('utf-8'))
+    data = pd.read_csv(string_data)
 
     # Display the uploaded data as a table
     st.write("Uploaded Data:", data)
@@ -43,15 +46,17 @@ if csv_file_upload is not None:
         user_question = "Please analyze the dataset and provide a report on climate change and its potential effects."
 
     # Create the LLMChain with the prompt template and model
-    chain = llm|prompt_template_final
+    chain = LLMChain(
+        llm=llm,
+        prompt_template=prompt_template_final
+    )
 
     # Call the chain with the dataset and user question to get the report
     if st.button('Generate Climate Report'):
         with st.spinner('Generating report...'):
             # Generate the response using the LLM
             response = chain.run({"question": user_question})
-
+            
             # Display the generated climate report
             st.write("Generated Climate Report:")
             st.write(response)
-

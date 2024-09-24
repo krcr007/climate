@@ -47,12 +47,24 @@ if csv_file_upload is not None:
     chain = prompt_template_final | llm
 
     # Call the chain with the dataset and user question to get the report
-    if st.button('Generate Climate Report'):
+   if st.button('Generate Climate Report'):
         with st.spinner('Generating report...'):
-            # Generate the response using the LLM
-            response = chain.invoke({"question": user_question})
-            
-            # Display the generated climate report
-            st.write("Generated Climate Report:")
-            for doc in response:
-                st.write(doc.page_content)
+            try:
+                # Generate the response using the LLM
+                response = chain.invoke({
+                    "data": data.to_string(index=False),
+                    "question": user_question
+                })
+                
+                # Check the response structure
+                st.write("Full Response Object:", response)
+
+                # Assuming response is a text, write it directly
+                if isinstance(response, str):
+                    st.write("Generated Climate Report:")
+                    st.write(response)
+                else:
+                    # If it's not a string, check if it has content attribute or keys
+                    st.write("Response content might need to be extracted differently.")
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")

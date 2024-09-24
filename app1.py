@@ -3,7 +3,7 @@ from langchain_openai import ChatOpenAI
 from langchain_community.document_loaders import CSVLoader
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.prompts import ChatPromptTemplate
-from langchain.chains import RunnableSequence
+from langchain_core.runnables import RunnableSequence
 import pandas as pd
 from io import StringIO
 

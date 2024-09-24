@@ -47,7 +47,7 @@ if csv_file_upload is not None:
     chain = prompt_template_final | llm
 
     # Call the chain with the dataset and user question to get the report
-   if st.button('Generate Climate Report'):
+    if st.button('Generate Climate Report'):
         with st.spinner('Generating report...'):
             try:
                 # Generate the response using the LLM

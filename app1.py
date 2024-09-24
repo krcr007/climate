@@ -9,7 +9,7 @@ from io import StringIO
 
 # Set up the OpenAI API key
 api_openai = "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"
-llm = ChatOpenAI(api_key=api_openai)
+llm = ChatOpenAI(api_key=api_openai,temperature=0)
 
 # Set the title of the Streamlit app
 st.title('Climate Change Report Generator')
@@ -27,7 +27,7 @@ if csv_file_upload is not None:
     st.write("Uploaded Data:", data)
 
     # Define the prompt template for generating the climate report
-    prompt_template = """You are an expert report maker and a climate expert. The provided dataset will be related to how the temperature has changed over the years. Your job is to make the report on how the climate has changed and predict how it can cause harm to human life."""
+    prompt_template = """You are an expert report maker and a climate expert and a envirmentalist expert also act like a Person on whom all the world is dependent on for climate change. The provided dataset will be related to how the temperature has changed over the years. Your job is to make the report on how the climate has changed and predict how it can cause harm to human life."""
 
     # Set up the final ChatPromptTemplate
     prompt_template_final = ChatPromptTemplate(
@@ -54,4 +54,5 @@ if csv_file_upload is not None:
             
             # Display the generated climate report
             st.write("Generated Climate Report:")
-            st.write(response)
+            for response in response:
+                st.write(response.content)

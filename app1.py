@@ -54,4 +54,4 @@ if csv_file_upload is not None:
             
             # Display the generated climate report
             st.write("Generated Climate Report:")
-            st.write(response)
+            st.write(response.content)

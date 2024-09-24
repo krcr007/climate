@@ -2,7 +2,8 @@ import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain_community.document_loaders import CSVLoader
 from langchain_core.prompts import ChatPromptTemplate
-from langchain.chains import LLMChain
+from langchain.prompts import ChatPromptTemplate
+from langchain.chains import RunnableSequence
 import pandas as pd
 from io import StringIO
 
@@ -26,14 +27,11 @@ if csv_file_upload is not None:
     st.write("Uploaded Data:", data)
 
     # Define the prompt template for generating the climate report
-    prompt_template = """You are a expert Report maker and also a climate expert. The provided dataset will be related to how the temperature has changed over the years. Your job is to make the report on how the climate has changed and predict how it can cause harm to human life."""
+    prompt_template = """You are an expert report maker and a climate expert. The provided dataset will be related to how the temperature has changed over the years. Your job is to make the report on how the climate has changed and predict how it can cause harm to human life."""
 
     # Set up the final ChatPromptTemplate
     prompt_template_final = ChatPromptTemplate(
-        [
-            prompt_template,
-            ("user", "{question}")
-        ]
+        messages=[prompt_template]
     )
 
     # Get the user input question (optional if you want the user to ask questions)
@@ -45,17 +43,14 @@ if csv_file_upload is not None:
     else:
         user_question = "Please analyze the dataset and provide a report on climate change and its potential effects."
 
-    # Create the LLMChain with the prompt template and model
-    chain = LLMChain(
-        llm=llm,
-        prompt_template=prompt_template_final
-    )
+    # Use the new chaining mechanism with RunnableSequence
+    chain = prompt_template_final | llm
 
     # Call the chain with the dataset and user question to get the report
     if st.button('Generate Climate Report'):
         with st.spinner('Generating report...'):
             # Generate the response using the LLM
-            response = chain.run({"question": user_question})
+            response = chain.invoke({"question": user_question})
             
             # Display the generated climate report
             st.write("Generated Climate Report:")

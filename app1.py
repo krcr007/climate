@@ -8,7 +8,7 @@ import pandas as pd
 from io import StringIO
 
 # Set up the OpenAI API key
-api_openai="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"
+api_openai = "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"
 llm = ChatOpenAI(api_key=api_openai)
 
 # Set the title of the Streamlit app
@@ -49,22 +49,9 @@ if csv_file_upload is not None:
     # Call the chain with the dataset and user question to get the report
     if st.button('Generate Climate Report'):
         with st.spinner('Generating report...'):
-            try:
-                # Generate the response using the LLM
-                response = chain.invoke({
-                    "data": data.to_string(index=False),
-                    "question": user_question
-                })
-                
-                # Check the response structure
-                st.write("Full Response Object:", response)
-
-                # Assuming response is a text, write it directly
-                if isinstance(response, str):
-                    st.write("Generated Climate Report:")
-                    st.write(response)
-                else:
-                    # If it's not a string, check if it has content attribute or keys
-                    st.write("Response content might need to be extracted differently.")
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
+            # Generate the response using the LLM
+            response = chain.invoke({"question": user_question})
+            
+            # Display the generated climate report
+            st.write("Generated Climate Report:")
+            st.write(response)

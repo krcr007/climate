@@ -8,7 +8,7 @@ import pandas as pd
 from io import StringIO
 
 # Set up the OpenAI API key
-api_openai = "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"
+api_openai = "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"
 llm = ChatOpenAI(api_key=api_openai)
 
 # Set the title of the Streamlit app
